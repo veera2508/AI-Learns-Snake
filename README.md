@@ -1,2 +1,2 @@
 # gym-snek
-Custom snake environment for Open AI Gym
+Deep Q Network learns to play snake
