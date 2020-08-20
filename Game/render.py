@@ -1,4 +1,4 @@
-import pygame
+import pyglet
 import time
 import numpy as np
 import random
@@ -13,52 +13,62 @@ class snek:
         self.actions = [0, 1, 2, 3]
         self.cstate = None
         self.dis = None
+        self.snake = None
+        self.food = None
+        self.scolor = (0, 0, 255)
+        self.fcolor = (255, 0, 0)
     
     def reset(self):
+        self.snake = []
         state = np.zeros((self.size, self.size))
         size = self.size
         x = random.randint(0, size - 1)
         y = random.randint(0, size - 1)
         foodx = random.randint(0, size - 1)
         foody = random.randint(0, size - 1) 
-        state[x][y] = 2
-        state[foodx][foody] = -1
+        self.food = (foodx, foody)
+        self.snake.append((x, y))
         self.cstate = state
         return state
 
     def start_render(self):
-        pygame.init()
-        self.dis = pygame.display.set_mode((self.size *10, self.size *10))
-        pygame.display.update()
+        self.dis = pyglet.window.Window(self.size *10, self.size *10)
 
-    def step(action):
+    def render(self):
+        dis = self.dis
+        batch = pyglet.graphics.Batch()
+        squares = []
+        for i in self.snake:
+            squares.append(pyglet.shapes.Rectangle(i[1] * 10, (self.size - i[0] - 1) * 10, 10, 10, color = self.scolor, batch = batch))
+        squares.append(pyglet.shapes.Rectangle(self.food[1] * 10, (self.size - self.food[0]) * 10, 10, 10, color = self.fcolor, batch = batch))
+        
+        @dis.event
+        def on_draw():
+            dis.clear()
+            batch.draw()
+        
+        @dis.event
+        def update(self):
+            dis.clear()
+            batch.draw()
+        
+        self.dis.
+
+
+    def step(self, action):
         pass
 
+env = snek(64)
+env.start_render()
+for i in range(20):
+    state = env.reset()
+    env.render()
+    print('Done')
 
-    def render_state(self, state):
-        height = 10
-        width = 10
-        for i in range(self.size):
-            for j in range(self.size):
-                if state[i][j] == 2:
-                    pygame.draw.rect(self.dis, (0, 0, 255), [j*10, i*10, height, width])
-                elif state[i][j] == -1:
-                    pygame.draw.rect(self.dis, (255, 0, 0), [j*10, i*10, height, width])
+
         
 
 
-    def stop_render(self):
-        pygame.quit()
-        quit()
 
-snake = snek(64)
-state = snake.reset()
-snake.start_render()
-print('Started Render')
-for i in range(10):
-    snake.render_state(state)
-    pygame.display.update()
-time.sleep(5)
-snake.stop_render()
 
 
