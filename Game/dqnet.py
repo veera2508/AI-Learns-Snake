@@ -26,13 +26,13 @@ class DQN:
         return self.model.predict(state)
     
     def update_network(self, samples, discount_factor):
-        States = np.array([s[0] for s in samples])
-        Next_States = np.array([s[3] for s in samples])
+        States = np.array([s['state'] for s in samples])
+        Next_States = np.array([s['next_state'] for s in samples])
         target = self.model.predict(States, batch_size = len(samples))
         target_next = self.model.predict(Next_States, batch_size = len(samples))
 
         for j,s in enumerate(samples):
-            state, action, reward, next_state, done = s
+            action, reward, done = s['action'], s['reward'], s['done']
             if done:
                 target[j][action] = reward
             else:
@@ -43,7 +43,7 @@ class DQN:
     
     def save(self, filename = None):
         f = ('model.h5' if filename is None else filename)
-        self.model.save_weights('Game/models' + f)
+        self.model.save_weights('Game/models/' + f)
     
     def load(self, path):
         self.model.load_weights(path)

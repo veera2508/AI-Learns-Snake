@@ -1,17 +1,20 @@
 import numpy as np
 import random
+import math
 
 
 class Snek:
 
-    def __init__(self, size, rewards, food_val, snake_val):
+    def __init__(self, size, rewards, food_val, snake_val, food_num, food_decay):
         self.obs_size = size
-        self.rewards = {}
+        self.rewards = rewards
         self.action_size= 4
         self.actions = [0, 1, 2, 3]
         self.cstate = None
         self.snake = None
         self.food = None
+        self.food_num = food_num
+        self.food_decay = food_decay
         self.head = None
         self.food_val = food_val
         self.snake_val = snake_val
@@ -20,18 +23,21 @@ class Snek:
         self.len = 1
     
     def reset(self):
+        self.food_num *= self.food_decay
         self.snake = []
+        self.food = []
         state = np.zeros((self.obs_size, self.obs_size))
         size = self.obs_size
         x = self.initx
         y = self.inity
-        foodx = random.randint(0, size - 1)
-        foody = random.randint(0, size - 1) 
-        self.food = (foodx, foody)
+        for _ in range(math.ceil(self.food_num)):
+            foodx = random.randint(0, size - 1)
+            foody = random.randint(0, size - 1) 
+            state[foodx][foody] = self.food_val
+            self.food.append((foodx, foody))
         self.head = (x, y)
         self.snake.append((x, y))
         state[x][y] = self.snake_val
-        state[foodx][foody] = self.food_val
         self.cstate = state
         return state
     
@@ -69,20 +75,21 @@ class Snek:
             self.head = (x,y)
             self.snake.append(self.head)
 
-            if self.head == self.food:
-                reward = 1
-                self.len += 1
-                self.food = (random.randint(0, self.obs_size - 1), random.randint(0, self.obs_size - 1))
-                food = True
-                print('Food')
+            for p,j in enumerate(self.food):
+                if self.head == j:
+                    self.len += 1
+                    self.food[p] = (random.randint(0, self.obs_size - 1), random.randint(0, self.obs_size - 1))
+                    food = True
+                    print('Food')
 
-            elif self.len < len(self.snake):
+            if self.len < len(self.snake):
                 del self.snake[0]
             
             
             for i in self.snake:
                 s[i[0]][i[1]] = self.snake_val
-            s[self.food[0]][self.food[1]] = self.food_val
+            for i in self.food:
+                s[i[0]][i[1]] = self.food_val
             self.cstate = s
 
         if done == True:
