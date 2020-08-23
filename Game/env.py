@@ -72,7 +72,7 @@ class snek:
             if self.head == self.food:
                 reward = 1
                 self.len += 1
-                self.food = (random.randint(0, self.size - 1), random.randint(0, self.size - 1))
+                self.food = (random.randint(0, self.obs_size - 1), random.randint(0, self.obs_size - 1))
                 food = True
                 print('Food')
 
