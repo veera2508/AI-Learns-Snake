@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 
-class snek:
+class Snek:
 
     def __init__(self, size, rewards, food_val, snake_val):
         self.obs_size = size

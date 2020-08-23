@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 
-class agent:
+class Agent:
     def __init__(self, env, batch_size, epsilon = 1, epsilon_decay = 0.99, discount_factor = 0.9, net_input = (64, 64, 2), no_of_actions = 4, ermax = 50000):
         self.env = env
         self.batch_size = batch_size

@@ -19,6 +19,7 @@ class DQN:
         Dense(no_of_actions, activation = "linear", kernel_initializer = "he_uniform")
         ])
         self.model.compile(optimizer = Adam(0.005), loss = 'mean_squared_error')
+        print(self.model.summary())
 
     def predict(self, state):
         state = np.expand_dims(state, axis = 0)
